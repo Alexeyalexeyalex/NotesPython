@@ -5,12 +5,13 @@ class Controller():
 
     def start(self):
         # список доступных команд
-        command = ["add", "edit", "del", "look", "exit"]
+        command = ["add", "edit", "del", "look", "ex"]
         # создание экземпляра класса ввода/вывода информации 
         view = View()
-        view.commandMenu(command)
-        
-        self.checkCommandMenu(input(),command)
+        view.firstStep()
+        while(True):
+            view.commandMenu(command)
+            self.checkCommandMenu(input(),command)
 
 
     # проверка правильности ввода команды 
@@ -25,6 +26,7 @@ class Controller():
     # определение действий для введенной команды
     def checkCommands(self, command):
         file = FileChanging()
+        view = View()
         # изменение заметок в файле
         match command:
             # добавление
@@ -39,8 +41,21 @@ class Controller():
             case "del":
                 file.delete()
 
+            # просотр заметок
             case "look":
-                file.look()
+                match view.lookMenu():
+                    case "id":
+                        id = view.noteID()
+                        file.lookId(id = id)
+                    case "dt":
+                        date = view.noteDate()
+                        file.lookDate(date = date)
+                    case "all":
+                        file.look()
+                
 
-            case "exit":
-                pass
+                
+            
+            # выход из программы
+            case "ex":
+                quit()
